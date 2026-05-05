@@ -52,7 +52,7 @@ app.get("/api/health", (req, res) => {
 });
 
 // 404 handler
-app.all("*", (req, res, next) => {
+app.all("/*", (req, res, next) => {
   const err = new Error(`Can't find ${req.originalUrl} on this server!`);
   err.statusCode = 404;
   next(err);
