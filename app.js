@@ -41,11 +41,11 @@ app.use("/products", productRouter);
 // Serve uploaded files
 app.use('/uploads', express.static('uploads'));
 app.use('/assets', express.static('assets'));
-/*
+
 // Health check
 app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
-});*/
+});
 
 // Global error handler
 app.use(errorhandler);
