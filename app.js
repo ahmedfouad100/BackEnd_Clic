@@ -27,7 +27,7 @@ async function DB_connection() {
 }
 
 //app.use(cors());
-app.use(cors);
+app.use(cors());
 
 app.use(express.json());
 let a = new Date();
