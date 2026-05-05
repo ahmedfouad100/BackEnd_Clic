@@ -57,6 +57,7 @@ app.all('/slot', (req, res, next) => {
 
 app.use(errorhandler);
 
-app.listen(port, () => {
-    console.log(`Server is connected on ${port}`);
-})
+// app.listen(port, () => {
+//     console.log(`Server is connected on ${port}`);
+// })
+module.exports = app;
