@@ -52,6 +52,10 @@ app.all('/slot', (req, res, next) => {
     next(err); 
 });
 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.use(errorhandler);
 
 // app.listen(port, () => {
