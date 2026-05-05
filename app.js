@@ -51,13 +51,6 @@ app.get("/api/health", (req, res) => {
   res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-// 404 handler
-app.all("/*", (req, res, next) => {
-  const err = new Error(`Can't find ${req.originalUrl} on this server!`);
-  err.statusCode = 404;
-  next(err);
-});
-
 // Global error handler
 app.use(errorhandler);
 
