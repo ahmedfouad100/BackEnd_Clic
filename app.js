@@ -25,12 +25,7 @@ async function DB_connection() {
 DB_connection();
 
 // CORS
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // Body parser
 app.use(express.json());
