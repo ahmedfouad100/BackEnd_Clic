@@ -1,64 +1,64 @@
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
-const express = require("express");
-const app = express();
-const port = process.env.PORT || 5000;
-const mongoose = require("mongoose");
 
-const morgan = require('morgan');
-const cors = require('cors');
-const fs = require('fs')
-const path = require('path');
+const express = require("express");
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const cors = require("cors");
 
 const userRouter = require("./routers/user.routes");
 const categoryRouter = require("./routers/category.routes");
 const productRouter = require("./routers/product.routes");
+const { errorhandler } = require("./middlewares/Error.middleware");
 
+const app = express();
 
-const {errorhandler} = require("./middlewares/Error.middleware");
+// Database connection
 async function DB_connection() {
-    try {
-        await mongoose.connect(process.env.DB_URL)
-        console.log("DataBase connected successfully");
-
-    } catch (error) {
-        console.log(error.message)
-    }
+  try {
+    await mongoose.connect(process.env.DB_URL);
+    console.log("Database connected successfully");
+  } catch (error) {
+    console.error("Database connection error:", error.message);
+  }
 }
+DB_connection();
 
-//app.use(cors());
-app.use(cors());
+// CORS
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    credentials: true,
+  })
+);
 
+// Body parser
 app.use(express.json());
-let a = new Date();
-const logFile = `${a.getDate()}-${a.getMonth()+1}-${a.getFullYear()}.log`;
-const sysLog = fs.createWriteStream(
-  path.join(__dirname, logFile),
-  { flags: 'a' } 
-)
-app.use(morgan('combined', { stream: sysLog }))
-app.use(morgan('dev'));
 
-DB_connection()
-app.use('/users',userRouter);
-app.use('/categories',categoryRouter);
-app.use('/products', productRouter);
+// Logging (console only)
+app.use(morgan("dev"));
 
-app.use('/uploads', express.static('uploads'));
+// API routes
+app.use("/users", userRouter);
+app.use("/categories", categoryRouter);
+app.use("/products", productRouter);
 
-app.all('/slot', (req, res, next) => {
-    const err = new Error(`Can't find ${req.originalUrl} on this server!`);
-    err.statusCode = 404;
-    next(err); 
+// Serve uploaded files
+app.use("/uploads", express.static("uploads"));
+
+// Health check
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+// 404 handler
+app.all("*", (req, res, next) => {
+  const err = new Error(`Can't find ${req.originalUrl} on this server!`);
+  err.statusCode = 404;
+  next(err);
 });
 
+// Global error handler
 app.use(errorhandler);
 
-// app.listen(port, () => {
-//     console.log(`Server is connected on ${port}`);
-// })
 module.exports = app;
