@@ -40,7 +40,7 @@ app.use("/products", productRouter);
 
 // Serve uploaded files
 app.use('/uploads', express.static('uploads'));
-app.use('/assets', express.static('assets'));
+// app.use('/assets', express.static('assets'));
 
 // Health check
 // app.get("/api/health", (req, res) => {
