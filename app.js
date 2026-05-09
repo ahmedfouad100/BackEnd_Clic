@@ -39,7 +39,8 @@ app.use("/categories", categoryRouter);
 app.use("/products", productRouter);
 
 // Serve uploaded files
-app.use('/uploads', express.static('uploads'));
+// app.use('/uploads', express.static('uploads'));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // app.use('/assets', express.static('assets'));
 
 // Health check
